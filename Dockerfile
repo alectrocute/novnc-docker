@@ -23,6 +23,7 @@ RUN apt-get update \
       ucspi-tcp \
       wget \
       x11vnc \
+      nginx \
       xvfb;
 
 ARG SRC_URL="https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb"
@@ -32,6 +33,9 @@ RUN wget -O /tmp/google-chrome.deb "${SRC_URL}"; \
 
 COPY chrome/policies.json /etc/opt/chrome/policies/managed/policies.json
 
+# nginx
+COPY nginx/nginx.conf /etc/nginx/nginx.conf
+
 RUN rm -rf /var/lib/apt/lists/*
 
 # Configure pulseaudio.
@@ -40,15 +44,19 @@ COPY default.pa client.conf /etc/pulse/
 # Force vnc_lite.html to be used for novnc, to avoid having the directory listing page.
 # Additionally, turn off the control bar. Finally, add a hook to start audio.
 COPY webaudio.js /usr/share/novnc/core/
-RUN ln -s /usr/share/novnc/vnc_lite.html /usr/share/novnc/index.html \
- && sed -i 's/display:flex/display:none/' /usr/share/novnc/app/styles/lite.css \
- && sed -i "/import RFB/a \
-      import WebAudio from './core/webaudio.js'" \
-    /usr/share/novnc/vnc_lite.html \
- && sed -i "/function connected(e)/a \
-      var wa = new WebAudio('ws://localhost:8081/websockify'); \
-      document.getElementsByTagName('canvas')[0].addEventListener('keydown', e => { wa.start(); });" \
-    /usr/share/novnc/vnc_lite.html
+COPY novnc/index.html /usr/share/novnc/index.html
+COPY novnc/style.css /usr/share/novnc/app/styles/lite.css
+
+# RUN ln -s /usr/share/novnc/vnc_lite.html /usr/share/novnc/index.html \
+#  && sed -i 's/display:flex/display:none/' /usr/share/novnc/app/styles/lite.css \
+#  && sed -i "/import RFB/a \
+#       import WebAudio from './core/webaudio.js'" \
+#     /usr/share/novnc/vnc_lite.html \
+#  && sed -i "/function connected(e)/a \
+#       const stream_location = location.port && [80, 443].indexOf(location.port) ? 'ws://' + location.hostname + ':' + location.port + '/audio' : 'ws://' + location.hostname + '/audio'; \
+#       var wa = new WebAudio(stream_location); \
+#       document.getElementsByTagName('canvas')[0].addEventListener('keydown', e => { wa.start(); });" \
+#     /usr/share/novnc/vnc_lite.html
 
 # Configure supervisord.
 COPY supervisord.conf /etc/supervisor/supervisord.conf

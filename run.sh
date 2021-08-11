@@ -1,11 +1,14 @@
 #!/bin/bash -eux
+docker kill $(docker ps -q) || true
+docker rm $(docker ps -a -q) || true
+docker rmi $(docker images -q) || true
+
 docker build . --tag orca
-docker rm -f orca || true
+
 docker run \
   --detach \
   --env DISPLAY_SETTINGS="1280x720x24" \
-  --publish 8080:8080 \
-  --publish 8081:8081 \
+  --publish 8080:8083 \
   --rm \
   --name orca \
   orca
