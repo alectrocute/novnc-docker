@@ -39,11 +39,11 @@ COPY nginx/nginx.conf /etc/nginx/nginx.conf
 RUN rm -rf /var/lib/apt/lists/*
 
 # Configure pulseaudio.
-COPY default.pa client.conf /etc/pulse/
+COPY pulseaudio/default.pa pulseaudio/client.conf /etc/pulse/
 
 # Force vnc_lite.html to be used for novnc, to avoid having the directory listing page.
 # Additionally, turn off the control bar. Finally, add a hook to start audio.
-COPY webaudio.js /usr/share/novnc/core/
+COPY novnc/webaudio.js /usr/share/novnc/core/
 COPY novnc/index.html /usr/share/novnc/index.html
 COPY novnc/style.css /usr/share/novnc/app/styles/lite.css
 
@@ -59,7 +59,7 @@ COPY novnc/style.css /usr/share/novnc/app/styles/lite.css
 #     /usr/share/novnc/vnc_lite.html
 
 # Configure supervisord.
-COPY supervisord.conf /etc/supervisor/supervisord.conf
+COPY supervisord/supervisord.conf /etc/supervisor/supervisord.conf
 ENTRYPOINT [ "supervisord", "-c", "/etc/supervisor/supervisord.conf" ]
 
 # Run everything as standard user/group df.
