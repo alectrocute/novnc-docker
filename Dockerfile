@@ -2,7 +2,6 @@ FROM debian:buster
 
 ENV LANG=en_US.UTF-8 LANGUAGE=en_US.UTF-8 LC_ALL=C.UTF-8 DISPLAY=:0.0
 
-# Install dependencies.
 RUN apt-get update \
  && DEBIAN_FRONTEND=noninteractive apt-get install --yes --no-install-recommends \
       bzip2 \
@@ -24,8 +23,16 @@ RUN apt-get update \
       ucspi-tcp \
       wget \
       x11vnc \
-      xvfb \
- && rm -rf /var/lib/apt/lists/*
+      xvfb;
+
+ARG SRC_URL="https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb"
+
+RUN wget -O /tmp/google-chrome.deb "${SRC_URL}"; \
+    apt-get install -y --no-install-recommends /tmp/google-chrome.deb;
+
+COPY chrome/policies.json /etc/opt/chrome/policies/managed/policies.json
+
+RUN rm -rf /var/lib/apt/lists/*
 
 # Configure pulseaudio.
 COPY default.pa client.conf /etc/pulse/
@@ -53,10 +60,4 @@ RUN groupadd df \
 WORKDIR /home/df
 USER df
 
-# Install Dwarf Fortress.
-ARG DF_VERSION=47_04
-RUN wget http://www.bay12games.com/dwarves/df_${DF_VERSION}_linux.tar.bz2 \
- && tar xf df_${DF_VERSION}_linux.tar.bz2 \
- && rm df_${DF_VERSION}_linux.tar.bz2 \
- && mv df_linux/libs/libstdc++.so.6 df_linux/libs/libstdc++.so.6.disabled \
- && sed -i 's/[WINDOWED:YES]/[WINDOWED:NO]/' df_linux/data/init/init.txt
+COPY --chown=df chrome/preferences.json /home/df/.config/google-chrome/Default/Preferences
