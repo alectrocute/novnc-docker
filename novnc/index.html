@@ -89,8 +89,10 @@
         }
 
         function connected(e) {
-            const stream_location = window.location.port && [80, 443].indexOf(window.location.port) ? 'ws://' + window.location.hostname + ':' + window.location.port + '/audio' : 'ws://' + window.location.hostname + '/audio';
-            var wa = new WebAudio(stream_location);
+            const isSecure = window.location.protocol.substring(0,5) == 'https';
+            const prefix = isSecure ? 'wss://' : 'ws://';
+            const audioWebsocketsPath = window.location.port && [80, 443].indexOf(window.location.port) ? prefix + window.location.hostname + ':' + window.location.port + '/audio' : prefix + window.location.hostname + '/audio';
+            var wa = new WebAudio(audioWebsocketsPath);
             document.getElementsByTagName('canvas')[0].addEventListener('keydown', e => { wa.start(); });
             document.getElementById('sendCtrlAltDelButton').disabled = false;
             if (WebUtil.getConfigVar('encrypt',
