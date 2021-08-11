@@ -25,14 +25,12 @@
         "chrome://policy"
     ],
     "ExtensionInstallForcelist": [
-        "cjpalhdlnbpafiamejdnhcphjbkeiagm;https://clients2.google.com/service/update2/crx",
-        "fjoaledfpmneenckfbpdfhkmimnjocfa;https://clients2.google.com/service/update2/crx"
+        "cjpalhdlnbpafiamejdnhcphjbkeiagm;https://clients2.google.com/service/update2/crx"
     ],
     "ExtensionInstallWhitelist": [
-        "cjpalhdlnbpafiamejdnhcphjbkeiagm",
-        "fjoaledfpmneenckfbpdfhkmimnjocfa"
+        "cjpalhdlnbpafiamejdnhcphjbkeiagm"
     ],
     "ExtensionInstallBlacklist": [
         "*"
     ]
-  }
+}
