@@ -177,6 +177,8 @@
             const rfb = window.rfb;
 
             rfb.viewOnly = WebUtil.getConfigVar('view_only', false);
+            rfb.qualityLevel = 1;
+            rfb.compressionLevel = 7;
             rfb.addEventListener("connect",  connected);
             rfb.addEventListener("disconnect", disconnected);
             rfb.addEventListener("capabilities", function () { updatePowerButtons(); });
