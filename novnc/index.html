@@ -3,19 +3,10 @@
 
 <head>
     <title>orca</title>
-
     <meta charset="utf-8">
-
-    <!-- Always force latest IE rendering engine (even in intranet) & Chrome Frame
-                Remove this if you use the .htaccess -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-
-    <!-- Stylesheets -->
     <link rel="stylesheet" href="app/styles/lite.css">
-
-    <!-- promise polyfills promises for IE11 -->
     <script src="vendor/promise.js"></script>
-    <!-- ES2015/ES6 modules polyfill -->
     <script type="module">
         window._noVNC_has_module_support = true;
     </script>
@@ -93,7 +84,9 @@
             const prefix = isSecure ? 'wss://' : 'ws://';
             const audioWebsocketsPath = window.location.port && [80, 443].indexOf(window.location.port) ? prefix + window.location.hostname + ':' + window.location.port + '/audio' : prefix + window.location.hostname + '/audio';
             var wa = new WebAudio(audioWebsocketsPath);
-            document.getElementsByTagName('canvas')[0].addEventListener('keydown', e => { wa.start(); });
+            document.getElementsByTagName('canvas')[0].addEventListener('mousedown', e => { wa.start(); }, {
+                once: true
+            });
             document.getElementById('sendCtrlAltDelButton').disabled = false;
             if (WebUtil.getConfigVar('encrypt',
                                      (window.location.protocol === "https:"))) {
@@ -129,13 +122,9 @@
         document.getElementById('machineResetButton').onclick = machineReset;
 
         WebUtil.init_logging(WebUtil.getConfigVar('logging', 'warn'));
-        // document.title = WebUtil.getConfigVar('title', 'noVNC');
-        // By default, use the host and port of server that served this file
         var host = WebUtil.getConfigVar('host', window.location.hostname);
         var port = WebUtil.getConfigVar('port', window.location.port);
-
-        // if port == 80 (or 443) then it won't be present and should be
-        // set manually
+        
         if (!port) {
             if (window.location.protocol.substring(0,5) == 'https') {
                 port = 443;
