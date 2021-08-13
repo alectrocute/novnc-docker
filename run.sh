@@ -8,6 +8,7 @@ docker build . --tag orca
 docker run \
   --detach \
   --env DISPLAY_SETTINGS="1280x720x24" \
+  --env HOMEPAGE="https://alec.is/lift-browser" \
   --publish 8080:8083 \
   --rm \
   --name orca \
