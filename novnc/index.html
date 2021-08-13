@@ -87,6 +87,9 @@
             document.getElementsByTagName('canvas')[0].addEventListener('mousedown', e => { wa.start(); }, {
                 once: true
             });
+            document.getElementsByTagName('canvas')[0].addEventListener('touchstart', e => { wa.start(); }, {
+                once: true
+            });
             document.getElementById('sendCtrlAltDelButton').disabled = false;
             if (WebUtil.getConfigVar('encrypt',
                                      (window.location.protocol === "https:"))) {
